@@ -8,20 +8,19 @@
         :root {
             --bg-color: #0f1115;
             --card-bg: #1a1d24;
-            --card-hover: #21252d;
-            --accent-gold: #ffcc00;
-            --text-main: #e2e8f0;
+            --accent-gold: #eab308;
+            --text-main: #f8fafc;
             --text-muted: #94a3b8;
             --border-color: #334155;
-            --route-color: #3b82f6;
+            --highlight-bg: #1e293b;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Roboto, sans-serif; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
 
         body {
             background-color: var(--bg-color);
             color: var(--text-main);
-            padding: 20px;
+            padding: 40px 20px;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -31,131 +30,159 @@
 
         header {
             text-align: center;
-            margin-bottom: 25px;
-            padding: 20px;
-            background: linear-gradient(135deg, #1e222b 0%, #15181e 100%);
+            margin-bottom: 40px;
+            padding: 30px;
+            background: var(--card-bg);
             border-radius: 12px;
             border: 1px solid var(--border-color);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
         }
 
-        h1 { color: var(--accent-gold); margin-bottom: 10px; font-size: 28px; }
-        p { color: var(--text-muted); font-size: 14px; margin-bottom: 15px; }
+        h1 { color: var(--text-main); margin-bottom: 10px; font-size: 26px; font-weight: 600; letter-spacing: -0.5px; }
+        p { color: var(--text-muted); font-size: 15px; margin-bottom: 25px; }
 
-        .controls { display: flex; gap: 10px; justify-content: center; align-items: center; flex-wrap: wrap; }
+        .controls { display: flex; gap: 12px; justify-content: center; align-items: center; flex-wrap: wrap; }
 
         input {
             background-color: var(--bg-color);
             border: 1px solid var(--border-color);
-            color: white; padding: 10px 15px; border-radius: 8px; font-size: 16px; width: 150px; outline: none;
+            color: white; padding: 12px 16px; border-radius: 8px; font-size: 15px; width: 160px; outline: none;
+            transition: border-color 0.2s;
         }
         input:focus { border-color: var(--accent-gold); }
 
         button.run-btn {
-            background-color: var(--accent-gold); color: #000; border: none; padding: 10px 20px;
-            border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; transition: transform 0.2s;
+            background-color: var(--text-main); color: var(--bg-color); border: none; padding: 12px 24px;
+            border-radius: 8px; font-size: 15px; font-weight: 600; cursor: pointer; transition: background-color 0.2s;
         }
-        button.run-btn:hover { background-color: #ffd633; transform: scale(1.05); }
-        button.run-btn:disabled { background-color: #555; color: #888; cursor: not-allowed; transform: none; }
+        button.run-btn:hover { background-color: #ffffff; }
+        button.run-btn:disabled { background-color: var(--border-color); color: var(--text-muted); cursor: not-allowed; }
 
-        #status-container { text-align: center; margin-top: 15px; font-weight: 500; color: var(--accent-gold); height: 20px; }
-        .progress-bar { width: 100%; height: 6px; background-color: var(--border-color); border-radius: 3px; margin-top: 15px; overflow: hidden; display: none; }
+        #status-container { text-align: center; margin-top: 20px; font-size: 14px; font-weight: 500; color: var(--text-muted); height: 20px; }
+        .progress-bar { width: 100%; height: 4px; background-color: var(--border-color); border-radius: 2px; margin-top: 20px; overflow: hidden; display: none; }
         .progress-fill { height: 100%; background-color: var(--accent-gold); width: 0%; transition: width 0.1s; }
 
-        .results-grid { display: flex; flex-direction: column; gap: 15px; margin-bottom: 30px; }
+        .results-grid { display: flex; flex-direction: column; gap: 16px; margin-bottom: 40px; }
 
         .card {
             background-color: var(--card-bg);
             border-radius: 10px;
             border: 1px solid var(--border-color);
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
             overflow: hidden;
-            transition: border-color 0.2s;
         }
-        .card:hover { border-color: var(--accent-gold); }
 
         .card-main {
             display: flex; justify-content: space-between; align-items: center;
-            padding: 15px 20px; background-color: var(--card-bg);
+            padding: 20px 25px; background-color: var(--card-bg);
         }
 
-        .card-info-group { display: flex; flex-direction: column; gap: 4px; }
-        .card-title { font-size: 18px; font-weight: bold; color: white; display: flex; align-items: center; gap: 8px; }
+        .card-info-group { display: flex; flex-direction: column; gap: 6px; }
+        .card-title { font-size: 18px; font-weight: 600; color: var(--text-main); }
         .card-runner { font-size: 14px; color: var(--text-muted); }
-        .card-time { font-size: 16px; font-weight: bold; color: var(--accent-gold); font-family: monospace; }
+        
+        .card-time-group { display: flex; align-items: center; gap: 20px; }
+        .card-time { font-size: 18px; font-weight: 600; color: var(--accent-gold); font-family: ui-monospace, monospace; }
 
         .info-btn {
-            background-color: var(--border-color); color: white; border: none;
-            width: 32px; height: 32px; border-radius: 50%; font-size: 16px; font-style: italic; font-family: serif;
-            cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background-color 0.2s;
+            background-color: transparent; color: var(--text-muted); border: 1px solid var(--border-color);
+            width: 32px; height: 32px; border-radius: 6px; font-size: 14px; font-style: italic; font-family: serif;
+            cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s;
         }
-        .info-btn:hover { background-color: var(--route-color); }
+        .info-btn:hover { background-color: var(--border-color); color: var(--text-main); }
 
         .card-details {
-            display: none; padding: 15px 20px; background-color: #12141a;
-            border-top: 1px solid var(--border-color); font-size: 14px;
+            display: none; padding: 30px 25px; background-color: var(--bg-color);
+            border-top: 1px solid var(--border-color);
         }
 
-        .stats-grid {
-            display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px;
-            background: rgba(255, 204, 0, 0.05); padding: 12px; border-radius: 8px; border: 1px solid rgba(255, 204, 0, 0.2);
+        .stats-row {
+            display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; margin-bottom: 35px;
         }
-        .stat-item { display: flex; flex-direction: column; }
-        .stat-label { font-size: 11px; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.5px; }
-        .stat-value { font-weight: bold; color: var(--text-main); }
+        .stat-item {
+            background: var(--card-bg); padding: 15px; border-radius: 8px; border: 1px solid var(--border-color);
+            display: flex; flex-direction: column; gap: 6px;
+        }
+        .stat-label { font-size: 12px; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.5px; font-weight: 500; }
+        .stat-value { font-weight: 600; color: var(--text-main); font-size: 14px; }
 
-        .timeline-title { font-size: 12px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 8px; border-bottom: 1px solid var(--border-color); padding-bottom: 4px; }
+        .section-title { font-size: 14px; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.5px; margin-bottom: 20px; font-weight: 600; }
         
-        .full-timeline-list { display: flex; flex-direction: column; gap: 5px; }
-        .timeline-row { display: flex; justify-content: space-between; font-size: 13px; }
-        .timeline-name { color: #cbd5e1; }
-        .timeline-time { font-family: monospace; color: var(--text-muted); }
+        /* Elegant Vertical Timeline */
+        .run-timeline {
+            margin-left: 10px;
+            padding-left: 25px;
+            border-left: 2px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        .timeline-step {
+            position: relative;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .timeline-step::before {
+            content: '';
+            position: absolute;
+            left: -32px; /* Align perfectly over the border */
+            top: 50%;
+            transform: translateY(-50%);
+            width: 12px;
+            height: 12px;
+            background: var(--bg-color);
+            border: 2px solid var(--accent-gold);
+            border-radius: 50%;
+        }
+
+        .step-name { font-size: 15px; font-weight: 500; color: var(--text-main); }
+        .step-time { font-family: ui-monospace, monospace; font-size: 14px; color: var(--text-muted); }
 
         .total-box {
-            background: linear-gradient(135deg, #2c2400 0%, #1a1600 100%);
-            border: 2px solid var(--accent-gold); border-radius: 12px; padding: 25px; text-align: center;
-            box-shadow: 0 0 20px rgba(255, 204, 0, 0.2); display: none; margin-bottom: 20px;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color); border-radius: 12px; padding: 35px; text-align: center;
+            display: none; margin-top: 20px;
         }
-        .total-title { color: var(--accent-gold); font-size: 16px; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 10px; }
-        .total-time { font-size: 36px; font-weight: bold; color: white; text-shadow: 0 2px 10px rgba(255, 204, 0, 0.4); }
-        .route-winner { font-size: 14px; color: #60a5fa; margin-top: 5px; font-weight: 500; display: none; }
+        .total-title { color: var(--text-muted); font-size: 14px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; font-weight: 600; }
+        .total-time { font-size: 42px; font-weight: 600; color: var(--accent-gold); font-family: ui-monospace, monospace; letter-spacing: -1px; }
+        .route-winner { font-size: 15px; color: var(--text-main); margin-top: 15px; font-weight: 500; }
     </style>
 </head>
 <body>
 
 <div class="container">
     <header>
-        <h1>🏆 God Run Simulator</h1>
-        <p>Calculates the absolute fastest continuous God Run from the Top 150.</p>
+        <h1>God Run Simulator</h1>
+        <p>Calculates the absolute fastest continuous route from top ranked matches.</p>
         <div class="controls">
             <input type="number" id="run-count" min="1" max="150" value="100" placeholder="Runs (1-150)">
-            <button class="run-btn" id="run-btn" onclick="startCompiler()">Simulate God Run</button>
+            <button class="run-btn" id="run-btn" onclick="startCompiler()">Simulate Route</button>
         </div>
         <div class="progress-bar" id="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
         <div id="status-container"></div>
     </header>
 
+    <div id="results" class="results-grid"></div>
+
     <div id="total" class="total-box">
-        <div class="total-title">🌟 Ultimate Continuous Time 🌟</div>
+        <div class="total-title">Theoretical Continuous Limit</div>
         <div class="total-time" id="total-time-display">00:00.000</div>
         <div id="route-winner" class="route-winner"></div>
     </div>
-
-    <div id="results" class="results-grid"></div>
 </div>
 
 <script>
-    // Emojis are back for the UI display names
     const DISPLAY_NAMES = {
-        "world_spawn": "🌍 World Spawn",
-        "story.enter_the_nether": "🔥 Nether Enter",
-        "nether.find_bastion": "🐷 Bastion",
-        "nether.find_fortress": "🏰 Fortress",
-        "nether.obtain_blaze_rod": "🪄 First Rod",
-        "projectelo.timeline.blind_travel": "👁️ Blind Travel",
-        "story.follow_ender_eye": "🕍 Stronghold",
-        "story.enter_the_end": "🌌 End Enter",
-        "projectelo.timeline.dragon_death": "🐉 Finish"
+        "world_spawn": "World Spawn",
+        "story.enter_the_nether": "Nether Enter",
+        "nether.find_bastion": "Bastion",
+        "nether.find_fortress": "Fortress",
+        "nether.obtain_blaze_rod": "First Rod",
+        "projectelo.timeline.blind_travel": "Blind Travel",
+        "story.follow_ender_eye": "Stronghold",
+        "story.enter_the_end": "End Enter",
+        "projectelo.timeline.dragon_death": "Finish"
     };
 
     const EDGES = {
@@ -182,12 +209,6 @@
         let secs = Math.floor((ms % 60000) / 1000);
         let millis = Math.floor(ms % 1000);
         return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}.${millis.toString().padStart(3, '0')}`;
-    }
-
-    // Helper to format raw internal names nicely if they aren't in our main list
-    function formatRawName(raw) {
-        if (DISPLAY_NAMES[raw]) return DISPLAY_NAMES[raw];
-        return raw.split('.').pop().split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
     }
 
     const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
@@ -233,7 +254,7 @@
 
             for (let i = 0; i < matches.length; i++) {
                 let match = matches[i];
-                status.innerText = `Analyzing run ${i + 1} of ${matches.length}...`;
+                status.innerText = `Analyzing run data... (${i + 1}/${matches.length})`;
                 progressFill.style.width = `${((i + 1) / matches.length) * 100}%`;
 
                 try {
@@ -248,20 +269,14 @@
                     let playerName = "Unknown";
                     (matchData.players || []).forEach(p => { if (p.uuid === winnerUuid) playerName = p.nickname; });
 
-                    // Save the match date and total time
-                    let matchDateStr = "Unknown Date";
+                    let matchDateStr = "Unknown";
                     if (matchData.date) {
                         matchDateStr = new Date(matchData.date * 1000).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
                     }
                     let finalMatchTime = matchData.result?.time;
-
-                    // Compile the full timeline for the expanded menu
-                    let rawTimelines = matchData.timelines || [];
-                    let winnerFullTimeline = [{ name: "🌍 World Spawn", time: 0 }];
                     
                     let pTimes = { "world_spawn": 0 };
-                    
-                    rawTimelines.forEach(t => {
+                    (matchData.timelines || []).forEach(t => {
                         if (t.uuid === winnerUuid && t.type && t.time != null) {
                             if (!(t.type in pTimes) || t.time < pTimes[t.type]) {
                                 pTimes[t.type] = t.time;
@@ -269,17 +284,17 @@
                         }
                     });
 
-                    // Sort everything chronological to show in the info panel
-                    let sortedSplits = [];
+                    // Build the strict, filtered timeline for the info panel
+                    let sortedSplits = [{ name: "World Spawn", time: 0 }];
                     for (let [type, time] of Object.entries(pTimes)) {
-                        if (type !== "world_spawn") {
-                            sortedSplits.push({ name: formatRawName(type), time: time });
+                        // Only add it to the timeline if it's one of our main milestones
+                        if (type !== "world_spawn" && DISPLAY_NAMES[type]) {
+                            sortedSplits.push({ name: DISPLAY_NAMES[type], time: time });
                         }
                     }
+                    // Sort them chronologically
                     sortedSplits.sort((a, b) => a.time - b.time);
-                    winnerFullTimeline = winnerFullTimeline.concat(sortedSplits);
 
-                    // Check edges for the fastest segment
                     Object.keys(EDGES).forEach(edgeKey => {
                         let startId = EDGES[edgeKey].start;
                         let targetId = EDGES[edgeKey].target;
@@ -298,7 +313,7 @@
                                         targetName: DISPLAY_NAMES[targetId],
                                         matchDate: matchDateStr,
                                         matchFinalTime: finalMatchTime,
-                                        fullTimeline: winnerFullTimeline
+                                        fullTimeline: sortedSplits
                                     };
                                 }
                             }
@@ -308,7 +323,7 @@
                 await delay(50);
             }
 
-            status.innerText = "Calculations complete!";
+            status.innerText = "Calculations complete.";
             setTimeout(() => { status.innerText = ""; progressBar.style.display = "none"; }, 1500);
 
             let bastionFirstSum = 0, fortressFirstSum = 0;
@@ -328,63 +343,62 @@
                 btn.disabled = false; return;
             }
 
-            document.getElementById("total-time-display").innerText = msToStr(winningSum);
-            routeWinnerDisplay.innerText = `Fastest Strategy: ${winningName}`;
-            routeWinnerDisplay.style.display = "block";
-            totalBox.style.display = "block";
-
-            // Render the visually pleasing cards
+            // Render cards
             winningRoute.forEach((edgeKey, index) => {
                 const info = bestEdges[edgeKey];
                 const card = document.createElement("div");
                 card.className = "card";
                 
-                // Build the HTML for the full timeline
+                // Build the HTML for the beautifully spaced timeline
                 let timelineHTML = info.fullTimeline.map(split => `
-                    <div class="timeline-row">
-                        <span class="timeline-name">${split.name}</span>
-                        <span class="timeline-time">${msToStr(split.time)}</span>
+                    <div class="timeline-step">
+                        <span class="step-name">${split.name}</span>
+                        <span class="step-time">${msToStr(split.time)}</span>
                     </div>
                 `).join('');
-
-                let cleanStart = info.startName.includes(' ') ? info.startName.split(' ').slice(1).join(' ') : info.startName;
 
                 card.innerHTML = `
                     <div class="card-main">
                         <div class="card-info-group">
                             <div class="card-title">${info.targetName}</div>
-                            <div class="card-runner">👤 ${info.player} <span style="font-size:12px; color:var(--text-muted);">from ${cleanStart}</span></div>
+                            <div class="card-runner">Runner: ${info.player} (from ${info.startName})</div>
                         </div>
-                        <div style="display: flex; align-items: center; gap: 15px;">
-                            <div class="card-time">⏱️ ${msToStr(info.duration)}</div>
+                        <div class="card-time-group">
+                            <div class="card-time">${msToStr(info.duration)}</div>
                             <button class="info-btn" onclick="toggleInfo(${index})">i</button>
                         </div>
                     </div>
                     
                     <div class="card-details" id="details-${index}">
-                        <div class="stats-grid">
+                        <div class="stats-row">
                             <div class="stat-item">
                                 <span class="stat-label">Date Played</span>
-                                <span class="stat-value">📅 ${info.matchDate}</span>
+                                <span class="stat-value">${info.matchDate}</span>
                             </div>
                             <div class="stat-item">
-                                <span class="stat-label">Total Match Time</span>
-                                <span class="stat-value">🏁 ${msToStr(info.matchFinalTime)}</span>
+                                <span class="stat-label">Match Time</span>
+                                <span class="stat-value">${msToStr(info.matchFinalTime)}</span>
                             </div>
                             <div class="stat-item">
-                                <span class="stat-label">Overall Leaderboard</span>
-                                <span class="stat-value">🏆 #${info.runRank} Fastest</span>
+                                <span class="stat-label">Leaderboard</span>
+                                <span class="stat-value">Rank #${info.runRank}</span>
                             </div>
                         </div>
                         
-                        <div class="timeline-title">Complete Run Timeline</div>
-                        <div class="full-timeline-list">
+                        <div class="section-title">Milestone Timeline</div>
+                        <div class="run-timeline">
                             ${timelineHTML}
                         </div>
                     </div>
                 `;
                 resultsDiv.appendChild(card);
             });
+
+            // Display total box at the bottom
+            document.getElementById("total-time-display").innerText = msToStr(winningSum);
+            routeWinnerDisplay.innerText = `Fastest Routing Strategy: ${winningName}`;
+            routeWinnerDisplay.style.display = "block";
+            totalBox.style.display = "block";
 
         } catch (error) {
             status.innerText = `Error: ${error.message}`;
