@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MCSR Gold Splits</title>
+    <style>
+        :root {
+            --bg-color: #0f1115;
+            --card-bg: #1a1d24;
+            --accent-gold: #ffcc00;
+            --text-main: #e2e8f0;
+            --text-muted: #94a3b8;
+            --border-color: #334155;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .container {
+            max-width: 800px;
+            width: 100%;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: linear-gradient(135deg, #1e222b 0%, #15181e 100%);
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+
+        h1 {
+            color: var(--accent-gold);
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+
+        .controls {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            align-items: center;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+
+        input {
+            background-color: var(--bg-color);
+            border: 1px solid var(--border-color);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-size: 16px;
+            width: 150px;
+            outline: none;
+        }
+
+        input:focus {
+            border-color: var(--accent-gold);
+        }
+
+        button {
+            background-color: var(--accent-gold);
+            color: #000;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s, background-color 0.2s;
+        }
+
+        button:hover {
+            background-color: #ffd633;
+            transform: scale(1.05);
+        }
+
+        button:disabled {
+            background-color: #555;
+            color: #888;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        #status-container {
+            text-align: center;
+            margin-bottom: 20px;
+            font-weight: 500;
+            color: var(--accent-gold);
+            height: 24px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background-color: var(--border-color);
+            border-radius: 4px;
+            margin-top: 10px;
+            overflow: hidden;
+            display: none;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background-color: var(--accent-gold);
+            width: 0%;
+            transition: width 0.1s;
+        }
+
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 10px;
+            padding: 20px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: transform 0.2s;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            border-color: var(--accent-gold);
+        }
+
+        .card-header {
+            font-size: 18px;
+            font-weight: bold;
+            color: white;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 10px;
+        }
+
+        .data-row {
+            margin-bottom: 8px;
+            font-size: 14px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .data-label {
+            color: var(--text-muted);
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .data-value {
+            font-weight: 500;
+        }
+
+        .highlight {
+            color: var(--accent-gold);
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .total-box {
+            background: linear-gradient(135deg, #2c2400 0%, #1a1600 100%);
+            border: 2px solid var(--accent-gold);
+            border-radius: 12px;
+            padding: 25px;
+            text-align: center;
+            box-shadow: 0 0 20px rgba(255, 204, 0, 0.2);
+            display: none;
+        }
+
+        .total-title {
+            color: var(--accent-gold);
+            font-size: 18px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+        }
+
+        .total-time {
+            font-size: 36px;
+            font-weight: bold;
+            color: white;
+            text-shadow: 0 2px 10px rgba(255, 204, 0, 0.4);
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>🏆 MCSR Gold Splits Compiler</h1>
+        <p>Calculate the absolute theoretical god run from the Top 150.</p>
+        <div class="controls">
+            <input type="number" id="run-count" min="1" max="150" value="100" placeholder="Runs (1-150)">
+            <button id="run-btn" onclick="startCompiler()">Generate Run</button>
+        </div>
+        <div class="progress-bar" id="progress-bar">
+            <div class="progress-fill" id="progress-fill"></div>
+        </div>
+    </header>
+
+    <div id="status-container"></div>
+    <div id="results" class="results-grid"></div>
+    <div id="total" class="total-box">
+        <div class="total-title">🌟 Theoretical Perfect Time 🌟</div>
+        <div class="total-time" id="total-time-display">00:00.000</div>
+    </div>
+</div>
+
+<script>
+    // Constants mapping exactly from your perfect Python logic
+    const DISPLAY_NAMES = {
+        "world_spawn": "🌍 World Spawn",
+        "story.enter_the_nether": "🔥 Nether Enter",
+        "nether.find_bastion": "🐷 Bastion",
+        "nether.find_fortress": "🏰 Fortress",
+        "nether.obtain_blaze_rod": "🪄 First Rod",
+        "projectelo.timeline.blind_travel": "👁️ Blind Travel",
+        "story.follow_ender_eye": "🕍 Stronghold",
+        "story.enter_the_end": "🌌 End Enter",
+        "projectelo.timeline.dragon_death": "🐉 Finish"
+    };
+
+    const SEGMENTS = [
+        {"id": "nether", "target": "story.enter_the_nether", "starts": ["world_spawn"]},
+        {"id": "bastion", "target": "nether.find_bastion", "starts": ["story.enter_the_nether", "world_spawn"]},
+        {"id": "fortress", "target": "nether.find_fortress", "starts": ["story.enter_the_nether", "world_spawn"]},
+        {"id": "rod", "target": "nether.obtain_blaze_rod", "starts": ["nether.find_fortress"]},
+        {"id": "blind", "target": "projectelo.timeline.blind_travel", "starts": ["nether.obtain_blaze_rod", "nether.find_bastion", "story.enter_the_nether"]},
+        {"id": "stronghold", "target": "story.follow_ender_eye", "starts": ["projectelo.timeline.blind_travel", "nether.obtain_blaze_rod", "nether.find_bastion", "story.enter_the_nether"]},
+        {"id": "end_enter", "target": "story.enter_the_end", "starts": ["story.follow_ender_eye"]},
+        {"id": "finish", "target": "projectelo.timeline.dragon_death", "starts": ["story.enter_the_end"]}
+    ];
+
+    function msToStr(ms) {
+        if (ms == null) return "00:00.000";
+        ms = Math.max(0, ms);
+        let mins = Math.floor(ms / 60000);
+        let secs = Math.floor((ms % 60000) / 1000);
+        let millis = Math.floor(ms % 1000);
+        return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}.${millis.toString().padStart(3, '0')}`;
+    }
+
+    // A tiny delay function to avoid getting rate-limited by the API
+    const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
+
+    async function startCompiler() {
+        const btn = document.getElementById("run-btn");
+        const status = document.getElementById("status-container");
+        const resultsDiv = document.getElementById("results");
+        const totalBox = document.getElementById("total");
+        const progressBar = document.getElementById("progress-bar");
+        const progressFill = document.getElementById("progress-fill");
+        
+        let countInput = parseInt(document.getElementById("run-count").value);
+        if (isNaN(countInput) || countInput < 1 || countInput > 150) {
+            alert("Please enter a valid number between 1 and 150.");
+            return;
+        }
+
+        // Reset UI
+        btn.disabled = true;
+        resultsDiv.innerHTML = "";
+        totalBox.style.display = "none";
+        progressBar.style.display = "block";
+        progressFill.style.width = "0%";
+        
+        let bestSegments = {};
+        SEGMENTS.forEach(seg => bestSegments[seg.id] = null);
+
+        try {
+            status.innerText = `Fetching the all-time leaderboard...`;
+            
+            // 1. Fetch Leaderboard
+            const lbRes = await fetch("https://api.mcsrranked.com/record-leaderboard");
+            if (!lbRes.ok) throw new Error("Failed to fetch leaderboard.");
+            const lbJson = await lbRes.json();
+            
+            let matches = lbJson.data.slice(0, countInput).map((match, index) => ({
+                id: match.id,
+                rank: index + 1
+            }));
+
+            // 2. Process each match individually
+            for (let i = 0; i < matches.length; i++) {
+                let match = matches[i];
+                status.innerText = `Analyzing run ${i + 1} of ${matches.length}... (Rank #${match.rank})`;
+                progressFill.style.width = `${((i + 1) / matches.length) * 100}%`;
+
+                try {
+                    const matchRes = await fetch(`https://api.mcsrranked.com/matches/${match.id}`);
+                    if (!matchRes.ok) continue;
+                    
+                    const matchJson = await matchRes.json();
+                    const matchData = matchJson.data || {};
+                    
+                    // Isolate the winner UUID
+                    const winnerUuid = matchData.result?.uuid;
+                    if (!winnerUuid) continue;
+
+                    let playerName = "Unknown";
+                    (matchData.players || []).forEach(p => {
+                        if (p.uuid === winnerUuid) playerName = p.nickname;
+                    });
+
+                    // Gather ONLY the winner's timeline
+                    let pTimes = { "world_spawn": 0 };
+                    (matchData.timelines || []).forEach(t => {
+                        if (t.uuid === winnerUuid && t.type && t.time != null) {
+                            if (!(t.type in pTimes) || t.time < pTimes[t.type]) {
+                                pTimes[t.type] = t.time;
+                            }
+                        }
+                    });
+
+                    // Calculate the segments perfectly
+                    SEGMENTS.forEach(seg => {
+                        const targetId = seg.target;
+                        if (targetId in pTimes) {
+                            const targetTime = pTimes[targetId];
+                            let bestStartId = null;
+                            let bestStartTime = -1;
+
+                            seg.starts.forEach(sid => {
+                                if (sid in pTimes) {
+                                    if (pTimes[sid] <= targetTime + 1000) {
+                                        if (pTimes[sid] > bestStartTime) {
+                                            bestStartTime = pTimes[sid];
+                                            bestStartId = sid;
+                                        }
+                                    }
+                                }
+                            });
+
+                            if (bestStartId) {
+                                let duration = targetTime - bestStartTime;
+                                if (duration < 0) duration = 0;
+
+                                if (bestSegments[seg.id] == null || duration < bestSegments[seg.id].duration) {
+                                    bestSegments[seg.id] = {
+                                        duration: duration,
+                                        startTime: bestStartTime,
+                                        targetTime: targetTime,
+                                        player: playerName,
+                                        runRank: match.rank,
+                                        startName: DISPLAY_NAMES[bestStartId],
+                                        targetName: DISPLAY_NAMES[targetId]
+                                    };
+                                }
+                            }
+                        }
+                    });
+                } catch (e) {
+                    console.error(`Error on match ${match.id}`, e);
+                }
+
+                // 50ms delay to respect rate limit
+                await delay(50);
+            }
+
+            status.innerText = "Calculations complete!";
+            setTimeout(() => { status.innerText = ""; progressBar.style.display = "none"; }, 2000);
+
+            // 3. Render the output
+            let totalGoldMs = 0;
+
+            SEGMENTS.forEach(seg => {
+                const info = bestSegments[seg.id];
+                const targetName = DISPLAY_NAMES[seg.target];
+                
+                const card = document.createElement("div");
+                card.className = "card";
+
+                if (!info) {
+                    card.innerHTML = `
+                        <div class="card-header">${targetName}</div>
+                        <div class="data-value" style="color: #ef4444;">❌ No data found</div>
+                    `;
+                } else {
+                    totalGoldMs += info.duration;
+                    
+                    let cleanStart = info.startName.includes(' ') ? info.startName.split(' ').slice(1).join(' ') : info.startName;
+                    let cleanTarget = targetName.includes(' ') ? targetName.split(' ').slice(1).join(' ') : targetName;
+
+                    card.innerHTML = `
+                        <div class="card-header">${targetName}</div>
+                        <div class="data-row">
+                            <span class="data-label">Fastest Segment Time</span>
+                            <span class="data-value highlight">⏱️ ${msToStr(info.duration)}</span>
+                        </div>
+                        <div class="data-row">
+                            <span class="data-label">Runner</span>
+                            <span class="data-value">👤 ${info.player} <span style="color: var(--text-muted); font-size: 12px;">(#${info.runRank} Overall)</span></span>
+                        </div>
+                        <div class="data-row">
+                            <span class="data-label">Timeline Track</span>
+                            <span class="data-value" style="font-size: 13px;">🕒 ${cleanStart} (${msToStr(info.startTime)}) ➔ ${cleanTarget} (${msToStr(info.targetTime)})</span>
+                        </div>
+                    `;
+                }
+                resultsDiv.appendChild(card);
+            });
+
+            // Show Total
+            document.getElementById("total-time-display").innerText = msToStr(totalGoldMs);
+            totalBox.style.display = "block";
+
+        } catch (error) {
+            status.innerText = `Error: ${error.message}`;
+        } finally {
+            btn.disabled = false;
+        }
+    }
+</script>
+
+</body>
+</html>
