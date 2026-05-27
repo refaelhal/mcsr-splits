@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MCSR Gold Splits</title>
+    <title>MCSR God Run Simulator</title>
     <style>
         :root {
             --bg-color: #0f1115;
@@ -12,14 +12,10 @@
             --text-main: #e2e8f0;
             --text-muted: #94a3b8;
             --border-color: #334155;
+            --route-color: #3b82f6;
         }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Roboto, sans-serif; }
 
         body {
             background-color: var(--bg-color);
@@ -30,14 +26,11 @@
             align-items: center;
         }
 
-        .container {
-            max-width: 800px;
-            width: 100%;
-        }
+        .container { max-width: 800px; width: 100%; }
 
         header {
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 25px;
             padding: 20px;
             background: linear-gradient(135deg, #1e222b 0%, #15181e 100%);
             border-radius: 12px;
@@ -45,19 +38,10 @@
             box-shadow: 0 4px 15px rgba(0,0,0,0.3);
         }
 
-        h1 {
-            color: var(--accent-gold);
-            margin-bottom: 10px;
-            font-size: 28px;
-        }
+        h1 { color: var(--accent-gold); margin-bottom: 10px; font-size: 28px; }
 
         .controls {
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-            align-items: center;
-            margin-top: 15px;
-            flex-wrap: wrap;
+            display: flex; gap: 10px; justify-content: center; align-items: center; margin-top: 15px; flex-wrap: wrap;
         }
 
         input {
@@ -71,9 +55,7 @@
             outline: none;
         }
 
-        input:focus {
-            border-color: var(--accent-gold);
-        }
+        input:focus { border-color: var(--accent-gold); }
 
         button {
             background-color: var(--accent-gold);
@@ -87,49 +69,29 @@
             transition: transform 0.2s, background-color 0.2s;
         }
 
-        button:hover {
-            background-color: #ffd633;
-            transform: scale(1.05);
-        }
+        button:hover { background-color: #ffd633; transform: scale(1.05); }
+        button:disabled { background-color: #555; color: #888; cursor: not-allowed; transform: none; }
 
-        button:disabled {
-            background-color: #555;
-            color: #888;
-            cursor: not-allowed;
-            transform: none;
-        }
+        #status-container { text-align: center; margin-bottom: 15px; font-weight: 500; color: var(--accent-gold); height: 24px; }
 
-        #status-container {
+        .progress-bar { width: 100%; height: 8px; background-color: var(--border-color); border-radius: 4px; margin-top: 10px; overflow: hidden; display: none; }
+        .progress-fill { height: 100%; background-color: var(--accent-gold); width: 0%; transition: width 0.1s; }
+
+        .route-winner {
             text-align: center;
+            background-color: rgba(59, 130, 246, 0.1);
+            border: 1px solid var(--route-color);
+            color: #60a5fa;
+            padding: 10px;
+            border-radius: 8px;
             margin-bottom: 20px;
-            font-weight: 500;
-            color: var(--accent-gold);
-            height: 24px;
-        }
-
-        .progress-bar {
-            width: 100%;
-            height: 8px;
-            background-color: var(--border-color);
-            border-radius: 4px;
-            margin-top: 10px;
-            overflow: hidden;
+            font-weight: bold;
             display: none;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
-        .progress-fill {
-            height: 100%;
-            background-color: var(--accent-gold);
-            width: 0%;
-            transition: width 0.1s;
-        }
-
-        .results-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 15px;
-            margin-bottom: 30px;
-        }
+        .results-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 15px; margin-bottom: 30px; }
 
         .card {
             background-color: var(--card-bg);
@@ -137,12 +99,7 @@
             padding: 20px;
             border: 1px solid var(--border-color);
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            transition: transform 0.2s;
-        }
-
-        .card:hover {
-            transform: translateY(-2px);
-            border-color: var(--accent-gold);
+            position: relative;
         }
 
         .card-header {
@@ -152,34 +109,14 @@
             margin-bottom: 15px;
             display: flex;
             align-items: center;
-            gap: 10px;
             border-bottom: 1px solid var(--border-color);
             padding-bottom: 10px;
         }
 
-        .data-row {
-            margin-bottom: 8px;
-            font-size: 14px;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .data-label {
-            color: var(--text-muted);
-            font-size: 12px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .data-value {
-            font-weight: 500;
-        }
-
-        .highlight {
-            color: var(--accent-gold);
-            font-size: 18px;
-            font-weight: bold;
-        }
+        .data-row { margin-bottom: 8px; font-size: 14px; display: flex; flex-direction: column; }
+        .data-label { color: var(--text-muted); font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .data-value { font-weight: 500; }
+        .highlight { color: var(--accent-gold); font-size: 18px; font-weight: bold; }
 
         .total-box {
             background: linear-gradient(135deg, #2c2400 0%, #1a1600 100%);
@@ -190,32 +127,19 @@
             box-shadow: 0 0 20px rgba(255, 204, 0, 0.2);
             display: none;
         }
-
-        .total-title {
-            color: var(--accent-gold);
-            font-size: 18px;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            margin-bottom: 10px;
-        }
-
-        .total-time {
-            font-size: 36px;
-            font-weight: bold;
-            color: white;
-            text-shadow: 0 2px 10px rgba(255, 204, 0, 0.4);
-        }
+        .total-title { color: var(--accent-gold); font-size: 18px; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 10px; }
+        .total-time { font-size: 36px; font-weight: bold; color: white; text-shadow: 0 2px 10px rgba(255, 204, 0, 0.4); }
     </style>
 </head>
 <body>
 
 <div class="container">
     <header>
-        <h1>🏆 MCSR Gold Splits Compiler</h1>
-        <p>Calculate the absolute theoretical god run from the Top 150.</p>
+        <h1>🏆 MCSR God Run Simulator</h1>
+        <p>Calculates the absolute fastest <strong>continuous</strong> route from the Top 150.</p>
         <div class="controls">
             <input type="number" id="run-count" min="1" max="150" value="100" placeholder="Runs (1-150)">
-            <button id="run-btn" onclick="startCompiler()">Generate Run</button>
+            <button id="run-btn" onclick="startCompiler()">Simulate God Run</button>
         </div>
         <div class="progress-bar" id="progress-bar">
             <div class="progress-fill" id="progress-fill"></div>
@@ -223,37 +147,39 @@
     </header>
 
     <div id="status-container"></div>
+    <div id="route-winner" class="route-winner"></div>
     <div id="results" class="results-grid"></div>
     <div id="total" class="total-box">
-        <div class="total-title">🌟 Theoretical Perfect Time 🌟</div>
+        <div class="total-title">🌟 Ultimate Continuous Time 🌟</div>
         <div class="total-time" id="total-time-display">00:00.000</div>
     </div>
 </div>
 
 <script>
-    // Constants mapping exactly from your perfect Python logic
-    const DISPLAY_NAMES = {
-        "world_spawn": "🌍 World Spawn",
-        "story.enter_the_nether": "🔥 Nether Enter",
-        "nether.find_bastion": "🐷 Bastion",
-        "nether.find_fortress": "🏰 Fortress",
-        "nether.obtain_blaze_rod": "🪄 First Rod",
-        "projectelo.timeline.blind_travel": "👁️ Blind Travel",
-        "story.follow_ender_eye": "🕍 Stronghold",
-        "story.enter_the_end": "🌌 End Enter",
-        "projectelo.timeline.dragon_death": "🐉 Finish"
+    // Define all physically possible links in a speedrun chain
+    const EDGES = {
+        "S_N":  { start: "world_spawn", target: "story.enter_the_nether", startName: "🌍 World Spawn", targetName: "🔥 Nether Enter" },
+        
+        // Bastion First Path Options
+        "N_B":  { start: "story.enter_the_nether", target: "nether.find_bastion", startName: "🔥 Nether Enter", targetName: "🐷 Bastion" },
+        "B_F":  { start: "nether.find_bastion", target: "nether.find_fortress", startName: "🐷 Bastion", targetName: "🏰 Fortress" },
+        "F_R":  { start: "nether.find_fortress", target: "nether.obtain_blaze_rod", startName: "🏰 Fortress", targetName: "🪄 First Rod" },
+        "R_BL": { start: "nether.obtain_blaze_rod", target: "projectelo.timeline.blind_travel", startName: "🪄 First Rod", targetName: "👁️ Blind Travel" },
+
+        // Fortress First Path Options
+        "N_F":  { start: "story.enter_the_nether", target: "nether.find_fortress", startName: "🔥 Nether Enter", targetName: "🏰 Fortress" },
+        "R_B":  { start: "nether.obtain_blaze_rod", target: "nether.find_bastion", startName: "🪄 First Rod", targetName: "🐷 Bastion" },
+        "B_BL": { start: "nether.find_bastion", target: "projectelo.timeline.blind_travel", startName: "🐷 Bastion", targetName: "👁️ Blind Travel" },
+        
+        // The End Game (Always the same)
+        "BL_ST": { start: "projectelo.timeline.blind_travel", target: "story.follow_ender_eye", startName: "👁️ Blind Travel", targetName: "🕍 Stronghold" },
+        "ST_E":  { start: "story.follow_ender_eye", target: "story.enter_the_end", startName: "🕍 Stronghold", targetName: "🌌 End Enter" },
+        "E_F":   { start: "story.enter_the_end", target: "projectelo.timeline.dragon_death", startName: "🌌 End Enter", targetName: "🐉 Finish" }
     };
 
-    const SEGMENTS = [
-        {"id": "nether", "target": "story.enter_the_nether", "starts": ["world_spawn"]},
-        {"id": "bastion", "target": "nether.find_bastion", "starts": ["story.enter_the_nether", "world_spawn"]},
-        {"id": "fortress", "target": "nether.find_fortress", "starts": ["story.enter_the_nether", "world_spawn"]},
-        {"id": "rod", "target": "nether.obtain_blaze_rod", "starts": ["nether.find_fortress"]},
-        {"id": "blind", "target": "projectelo.timeline.blind_travel", "starts": ["nether.obtain_blaze_rod", "nether.find_bastion", "story.enter_the_nether"]},
-        {"id": "stronghold", "target": "story.follow_ender_eye", "starts": ["projectelo.timeline.blind_travel", "nether.obtain_blaze_rod", "nether.find_bastion", "story.enter_the_nether"]},
-        {"id": "end_enter", "target": "story.enter_the_end", "starts": ["story.follow_ender_eye"]},
-        {"id": "finish", "target": "projectelo.timeline.dragon_death", "starts": ["story.enter_the_end"]}
-    ];
+    // The two continuous timeline routes a runner can physically take
+    const ROUTE_BASTION_FIRST = ["S_N", "N_B", "B_F", "F_R", "R_BL", "BL_ST", "ST_E", "E_F"];
+    const ROUTE_FORTRESS_FIRST = ["S_N", "N_F", "F_R", "R_B", "B_BL", "BL_ST", "ST_E", "E_F"];
 
     function msToStr(ms) {
         if (ms == null) return "00:00.000";
@@ -264,7 +190,6 @@
         return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}.${millis.toString().padStart(3, '0')}`;
     }
 
-    // A tiny delay function to avoid getting rate-limited by the API
     const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
 
     async function startCompiler() {
@@ -272,6 +197,7 @@
         const status = document.getElementById("status-container");
         const resultsDiv = document.getElementById("results");
         const totalBox = document.getElementById("total");
+        const routeWinnerDisplay = document.getElementById("route-winner");
         const progressBar = document.getElementById("progress-bar");
         const progressFill = document.getElementById("progress-fill");
         
@@ -281,20 +207,20 @@
             return;
         }
 
-        // Reset UI
         btn.disabled = true;
         resultsDiv.innerHTML = "";
         totalBox.style.display = "none";
+        routeWinnerDisplay.style.display = "none";
         progressBar.style.display = "block";
         progressFill.style.width = "0%";
         
-        let bestSegments = {};
-        SEGMENTS.forEach(seg => bestSegments[seg.id] = null);
+        // Track the fastest duration for EVERY physical edge
+        let bestEdges = {};
+        Object.keys(EDGES).forEach(key => bestEdges[key] = null);
 
         try {
             status.innerText = `Fetching the all-time leaderboard...`;
             
-            // 1. Fetch Leaderboard
             const lbRes = await fetch("https://api.mcsrranked.com/record-leaderboard");
             if (!lbRes.ok) throw new Error("Failed to fetch leaderboard.");
             const lbJson = await lbRes.json();
@@ -304,10 +230,9 @@
                 rank: index + 1
             }));
 
-            // 2. Process each match individually
             for (let i = 0; i < matches.length; i++) {
                 let match = matches[i];
-                status.innerText = `Analyzing run ${i + 1} of ${matches.length}... (Rank #${match.rank})`;
+                status.innerText = `Analyzing route links from run ${i + 1} of ${matches.length}...`;
                 progressFill.style.width = `${((i + 1) / matches.length) * 100}%`;
 
                 try {
@@ -317,7 +242,6 @@
                     const matchJson = await matchRes.json();
                     const matchData = matchJson.data || {};
                     
-                    // Isolate the winner UUID
                     const winnerUuid = matchData.result?.uuid;
                     if (!winnerUuid) continue;
 
@@ -326,7 +250,7 @@
                         if (p.uuid === winnerUuid) playerName = p.nickname;
                     });
 
-                    // Gather ONLY the winner's timeline
+                    // Gather the winner's strict chronological timeline
                     let pTimes = { "world_spawn": 0 };
                     (matchData.timelines || []).forEach(t => {
                         if (t.uuid === winnerUuid && t.type && t.time != null) {
@@ -336,38 +260,27 @@
                         }
                     });
 
-                    // Calculate the segments perfectly
-                    SEGMENTS.forEach(seg => {
-                        const targetId = seg.target;
-                        if (targetId in pTimes) {
-                            const targetTime = pTimes[targetId];
-                            let bestStartId = null;
-                            let bestStartTime = -1;
+                    // Calculate the speed of every possible connection they made
+                    Object.keys(EDGES).forEach(edgeKey => {
+                        let startId = EDGES[edgeKey].start;
+                        let targetId = EDGES[edgeKey].target;
 
-                            seg.starts.forEach(sid => {
-                                if (sid in pTimes) {
-                                    if (pTimes[sid] <= targetTime + 1000) {
-                                        if (pTimes[sid] > bestStartTime) {
-                                            bestStartTime = pTimes[sid];
-                                            bestStartId = sid;
-                                        }
-                                    }
-                                }
-                            });
-
-                            if (bestStartId) {
-                                let duration = targetTime - bestStartTime;
-                                if (duration < 0) duration = 0;
-
-                                if (bestSegments[seg.id] == null || duration < bestSegments[seg.id].duration) {
-                                    bestSegments[seg.id] = {
+                        if (startId in pTimes && targetId in pTimes) {
+                            let startTime = pTimes[startId];
+                            let targetTime = pTimes[targetId];
+                            
+                            let duration = targetTime - startTime;
+                            // Only count it if they actually went in that order!
+                            if (duration >= 0) {
+                                if (bestEdges[edgeKey] == null || duration < bestEdges[edgeKey].duration) {
+                                    bestEdges[edgeKey] = {
                                         duration: duration,
-                                        startTime: bestStartTime,
+                                        startTime: startTime,
                                         targetTime: targetTime,
                                         player: playerName,
                                         runRank: match.rank,
-                                        startName: DISPLAY_NAMES[bestStartId],
-                                        targetName: DISPLAY_NAMES[targetId]
+                                        startName: EDGES[edgeKey].startName,
+                                        targetName: EDGES[edgeKey].targetName
                                     };
                                 }
                             }
@@ -377,55 +290,79 @@
                     console.error(`Error on match ${match.id}`, e);
                 }
 
-                // 50ms delay to respect rate limit
                 await delay(50);
             }
 
-            status.innerText = "Calculations complete!";
-            setTimeout(() => { status.innerText = ""; progressBar.style.display = "none"; }, 2000);
+            status.innerText = "Comparing Route Strategies...";
+            setTimeout(() => { status.innerText = ""; progressBar.style.display = "none"; }, 1500);
 
-            // 3. Render the output
-            let totalGoldMs = 0;
+            // Calculate which continuous route is mathematically faster
+            let bastionFirstSum = 0;
+            let fortressFirstSum = 0;
+            let validBastion = true;
+            let validFortress = true;
 
-            SEGMENTS.forEach(seg => {
-                const info = bestSegments[seg.id];
-                const targetName = DISPLAY_NAMES[seg.target];
-                
+            ROUTE_BASTION_FIRST.forEach(edge => {
+                if (!bestEdges[edge]) validBastion = false;
+                else bastionFirstSum += bestEdges[edge].duration;
+            });
+
+            ROUTE_FORTRESS_FIRST.forEach(edge => {
+                if (!bestEdges[edge]) validFortress = false;
+                else fortressFirstSum += bestEdges[edge].duration;
+            });
+
+            let winningRoute = [];
+            let winningSum = 0;
+            let winningName = "";
+
+            if (validBastion && (!validFortress || bastionFirstSum <= fortressFirstSum)) {
+                winningRoute = ROUTE_BASTION_FIRST;
+                winningSum = bastionFirstSum;
+                winningName = "Bastion First Strategy";
+            } else if (validFortress) {
+                winningRoute = ROUTE_FORTRESS_FIRST;
+                winningSum = fortressFirstSum;
+                winningName = "Fortress First Strategy";
+            } else {
+                status.innerText = "Error: Not enough data to complete a full run timeline.";
+                btn.disabled = false;
+                return;
+            }
+
+            // Display the winning strategy
+            routeWinnerDisplay.innerText = `🏆 Winning God Run Route: ${winningName} 🏆`;
+            routeWinnerDisplay.style.display = "block";
+
+            // Render ONLY the winning, physically possible timeline
+            winningRoute.forEach((edgeKey, index) => {
+                const info = bestEdges[edgeKey];
                 const card = document.createElement("div");
                 card.className = "card";
+                
+                let cleanStart = info.startName.includes(' ') ? info.startName.split(' ').slice(1).join(' ') : info.startName;
+                let cleanTarget = info.targetName.includes(' ') ? info.targetName.split(' ').slice(1).join(' ') : info.targetName;
 
-                if (!info) {
-                    card.innerHTML = `
-                        <div class="card-header">${targetName}</div>
-                        <div class="data-value" style="color: #ef4444;">❌ No data found</div>
-                    `;
-                } else {
-                    totalGoldMs += info.duration;
-                    
-                    let cleanStart = info.startName.includes(' ') ? info.startName.split(' ').slice(1).join(' ') : info.startName;
-                    let cleanTarget = targetName.includes(' ') ? targetName.split(' ').slice(1).join(' ') : targetName;
-
-                    card.innerHTML = `
-                        <div class="card-header">${targetName}</div>
-                        <div class="data-row">
-                            <span class="data-label">Fastest Segment Time</span>
-                            <span class="data-value highlight">⏱️ ${msToStr(info.duration)}</span>
-                        </div>
-                        <div class="data-row">
-                            <span class="data-label">Runner</span>
-                            <span class="data-value">👤 ${info.player} <span style="color: var(--text-muted); font-size: 12px;">(#${info.runRank} Overall)</span></span>
-                        </div>
-                        <div class="data-row">
-                            <span class="data-label">Timeline Track</span>
-                            <span class="data-value" style="font-size: 13px;">🕒 ${cleanStart} (${msToStr(info.startTime)}) ➔ ${cleanTarget} (${msToStr(info.targetTime)})</span>
-                        </div>
-                    `;
-                }
+                card.innerHTML = `
+                    <div class="card-header"><span style="color:var(--text-muted); font-size:14px; margin-right:10px;">Part ${index + 1}</span> ${info.targetName}</div>
+                    <div class="data-row">
+                        <span class="data-label">Fastest Travel Time</span>
+                        <span class="data-value highlight">⏱️ ${msToStr(info.duration)}</span>
+                    </div>
+                    <div class="data-row">
+                        <span class="data-label">Link Pulled From</span>
+                        <span class="data-value">👤 ${info.player} <span style="color: var(--text-muted); font-size: 12px;">(Rank #${info.runRank})</span></span>
+                    </div>
+                    <div class="data-row">
+                        <span class="data-label">Physical Path Taken</span>
+                        <span class="data-value" style="font-size: 13px; color: var(--route-color);">📍 ${cleanStart} ➔ ${cleanTarget}</span>
+                    </div>
+                `;
                 resultsDiv.appendChild(card);
             });
 
             // Show Total
-            document.getElementById("total-time-display").innerText = msToStr(totalGoldMs);
+            document.getElementById("total-time-display").innerText = msToStr(winningSum);
             totalBox.style.display = "block";
 
         } catch (error) {
